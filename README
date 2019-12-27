@@ -1,0 +1,48 @@
+A simple and secure reverse-tunneling solution, based on docker.
+
+SSH daemon is containerized with an unprivileged user to offer maximal security.
+Even if an attacker gains access, it can do nothing else than... access one of
+the destination you authorized. Server can never be compromised.
+
+See Dockerfile for configuration of ssh daemon.
+
+On server, current user authorized_keys file is mapped in container. It allows
+easy management of keys from different clients based on user that runs the
+server.
+
+In container, only ssh port is published on host.
+
+You can create a tunnel from one machine and use it from another one.
+
+--------------------------------------------------------------------------------
+./server.sh: launch a server to allow any tunneling
+./access.sh: open a local tunnel to a specific destination
+             (accessible from server)
+./give_access.sh: open a remote tunnel on the server to a specific destination 
+                  (accessible from current machine)
+
+--------------------------------------------------------------------------------
+
+# Example to access to a secret server through SSH
+# on server (public machine having access to secret server)
+# executed by user johndoe
+./server.sh 6666 my.secret.server:22
+
+# on your machine
+./access.sh johndoe SERVER_IP 6666 10000 my.secret.server 22
+ssh localhost -p 10000
+# same as ssh my.secret.server if you had access to it!
+
+--------------------------------------------------------------------------------
+
+# Example to access your local machine through SSH
+# on server (public machine available on the internet)
+./server.sh 6666 localhost:*
+# on machine A
+# localhost refers to machine A
+./give_access.sh johndoe SERVER_IP 6666 10000 localhost 22
+
+# From machine B, to access A ssh on port 15000
+# localhost refers to server here
+./access.sh johndoe SERVER_IP 6666 15000 localhost 10000
+ssh localhost -p 15000

@@ -1,0 +1,12 @@
+[Unit]
+Description=tunnel create
+After=network.target
+
+[Service]
+Restart=always
+RestartSec=30
+User=YOUR_USER
+ExecStart=/path/to/give_access.sh SERVER_USER SERVER_IP SERVER_PORT 10000 localhost 22
+
+[Install]
+WantedBy=multi-user.target
