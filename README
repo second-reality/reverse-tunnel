@@ -18,7 +18,7 @@ You can create a tunnel from one machine and use it from another one.
 ./server.sh: launch a server to allow any tunneling
 ./access.sh: open a local tunnel to a specific destination
              (accessible from server)
-./give_access.sh: open a remote tunnel on the server to a specific destination 
+./give_access.sh: open a remote tunnel on the server to a specific destination
                   (accessible from current machine)
 
 --------------------------------------------------------------------------------
@@ -46,3 +46,10 @@ ssh localhost -p 10000
 # localhost refers to server here
 ./access.sh johndoe SERVER_IP 6666 15000 localhost 10000
 ssh localhost -p 15000
+
+--------------------------------------------------------------------------------
+To simplify previous example, you can use:
+# on server
+./tools/dig_tunnel.sh 6666 10000
+# let client connect at distance with give_access.sh on port 10000...
+ssh localhost -p 10000

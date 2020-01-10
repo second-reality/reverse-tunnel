@@ -14,6 +14,7 @@ local_port=$4
 destination=$5
 destination_port=$6
 
+echo "open access on $server: -L $local_port:$destination:$destination_port"
 ssh $server_user@$server\
   -p $server_ssh_port -C -T -N\
   -L $local_port:$destination:$destination_port\

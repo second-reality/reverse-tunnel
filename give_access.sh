@@ -14,6 +14,7 @@ server_tunnel_port=$4
 destination=$5
 destination_port=$6
 
+echo "give access on $server: -R $server_tunnel_port:$destination:$destination_port"
 ssh $server_user@$server\
   -p $server_ssh_port -C -T -N\
   -R $server_tunnel_port:$destination:$destination_port\
