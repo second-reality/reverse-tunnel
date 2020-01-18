@@ -29,6 +29,8 @@ echo "Listening on port $ssh_port"
 echo "Authorized destinations: $authorized_destinations"
 echo "Authorized keys file: $authorized_keys"
 echo "-------------------------------------------------"
+echo "** Kill server using CTRL+\\ (sigquit) **"
+echo "-------------------------------------------------"
 
 terminal=
 [ -t 1 ] && terminal="-it"
@@ -38,8 +40,33 @@ docker run --rm=true -p $ssh_port:$ssh_port $terminal\
   -v $authorized_keys:$authorized_keys:ro\
   -v /etc/passwd:/etc/passwd:ro \
   -v /etc/group:/etc/group:ro \
-  -e SSH_PORT=$ssh_port\
-  -e AUTHORIZED_DESTINATIONS="$authorized_destinations"\
-  -e AUTHORIZED_USER="$USER"\
   -u $(id -u)\
-  reverse-tunnel || die "running server failed"
+  reverse-tunnel\
+  /app/sshd\
+  -p $ssh_port\
+  -D `: # stay in foreground`\
+  -e `: # log on stdout`\
+  -o ClientAliveInterval=180 `: #keep client alive`\
+  -o ClientAliveCountMax=2\
+  `: # restrict local tunneling to only some destinations`\
+  `: # This is the heart of security!`\
+  -o PermitOpen="$authorized_destinations"\
+  `: # allow anyone to access forwarded ports and not only localhost`\
+  -o GatewayPorts=yes\
+  `: # only allow a specific user to connect (the one running container)`\
+  -o AllowUsers="$USER"\
+  `: # prevent execution of any command`\
+  -o ForceCommand="/bin/true"\
+  `: # other params (man sshd_config)`\
+  -o UsePAM=no\
+  -o PasswordAuthentication=no\
+  -o AllowStreamLocalForwarding=no\
+  -o AllowAgentForwarding=no\
+  -o AllowTcpForwarding=yes\
+  -o AuthenticationMethods=publickey\
+  -o MaxAuthTries=1\
+  -o PermitRootLogin=no\
+  -o PermitTunnel=yes\
+  -o PrintMotd=no\
+  -o PidFile=none\
+  || die "running server failed"

@@ -12,6 +12,12 @@ server.
 
 In container, only ssh port is published on host.
 
+In container, only ssh server is present, thanks to Google distroless approach:
+https://github.com/GoogleContainerTools/distroless. Basically, we do a two-stage
+dockerfile. In first stage, we retrieve ssh server. In second one, we only copy
+it and retrieve its dependencies. Result is a very lightweight, and secure
+image.
+
 You can create a tunnel from one machine and use it from another one.
 
 --------------------------------------------------------------------------------
