@@ -16,7 +16,7 @@ In container, only ssh server is present, thanks to Google distroless approach:
 https://github.com/GoogleContainerTools/distroless. Basically, we do a two-stage
 dockerfile. In first stage, we retrieve ssh server. In second one, we only copy
 it and retrieve its dependencies. Result is a very lightweight, and secure
-image.
+image (it does not even contain a shell!).
 
 You can create a tunnel from one machine and use it from another one.
 
@@ -55,7 +55,7 @@ ssh localhost -p 15000
 
 --------------------------------------------------------------------------------
 To simplify previous example, you can use:
-# on server
+# on server (need tmux)
 ./tools/dig_tunnel.sh 6666 10000
 # let client connect at distance with give_access.sh on port 10000...
 ssh localhost -p 10000
