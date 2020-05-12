@@ -20,3 +20,7 @@ ssh $server_user@$server\
   -R $server_tunnel_port:$destination:$destination_port\
   -o ServerAliveInterval=120 -o ServerAliveCountMax=2\
   -o ConnectTimeout=10\
+
+  # If need access without checking server key
+  #-o StrictHostKeyChecking=no\
+  #-o UserKnownHostsFile=/dev/null\
