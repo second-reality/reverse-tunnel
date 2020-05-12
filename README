@@ -43,7 +43,11 @@ ssh localhost -p 10000
 
 # Example to access your local machine through SSH
 # on server (public machine available on the internet)
+# [[IMPORTANT: localhost refers here to a container with ssh server. This is *not*
+# server machine. In particular, you can't access server ssh port by this way.
+# You must explicitly give access to it using give_access.sh]]
 ./server.sh 6666 localhost:*
+
 # on machine A
 # localhost refers to machine A
 ./give_access.sh johndoe SERVER_IP 6666 10000 localhost 22
