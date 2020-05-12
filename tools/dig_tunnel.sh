@@ -24,6 +24,7 @@ while [ $err -eq 1 ]; do
   sleep 1
   nc -z localhost $server_port || err=1
 done
+sleep 1
 tmux split-window -t $s ./access.sh $USER localhost $server_port $client_port localhost $client_port
 # put focus on server
 tmux select-pane -t $s -U
