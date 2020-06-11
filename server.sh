@@ -19,6 +19,8 @@ ssh_port=$1
 shift
 authorized_destinations="$@"
 
+# commit intermediate container to keep SSH key file inside it
+docker build "$script_dir" -t reverse-tunnel-intermediate --target b
 docker build "$script_dir" -t reverse-tunnel
 
 authorized_keys=/home/$USER/.ssh/authorized_keys
